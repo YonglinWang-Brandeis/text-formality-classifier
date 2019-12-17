@@ -3,6 +3,7 @@ functions for preprocessing each sentence from the corpus (Part 1)
 """
 
 import corenlp, textblob
+from nltk.tokenize import word_tokenize
 from pickle import dump, load
 
 
@@ -11,7 +12,7 @@ def get_case(str):
     return the number of entirely-capitalized words; binary indicator for whether sentence is lowercase; binary indicator
     for whether the first word is capitalized.
     """
-    pass
+    return (len([w for w in word_tokenize(str) if w.isupper()]), int(str.islower()), int(str[0].isupper()))
 
 
 def get_dependency(str):
@@ -67,3 +68,15 @@ def get_punctuation_number(str):
     punctuation Number of ‘?’, ‘...’, and ‘!’ in the sentence.
     """
     pass
+
+
+if __name__ == "__main__":
+    inf1 = "WOW this website IS amazing!!"
+    inf2 = "i dunno if they're cool with it"
+    for1 = "I shall not comment further on this issue."
+    for2 = "Listening to what she thinks would be utterly beneficial."
+    exs = [inf1, inf2, for1, for2]
+
+    for sent in exs:
+        print("result: %s, sentence: \"%s\"" % (str(get_case(sent)), sent))
+
