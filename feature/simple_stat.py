@@ -2,17 +2,15 @@
 functions for preprocessing each sentence from the corpus (Part 1)
 """
 
-import corenlp, textblob
+import corenlp, textblob, stanfordnlp
 from nltk.tokenize import word_tokenize
 from pickle import dump, load
 
-
-def get_case(str):
-    """
-    return a number list containing: the number of entirely-capitalized words; binary indicator for whether sentence is lowercase; binary indicator
-    for whether the first word is capitalized.
-    """
-    return [len([w for w in word_tokenize(str) if w.isupper()]), int(str.islower()), int(str[0].isupper())]
+#++++++++++++++++++++++++++++++++++
+#
+# Features that need to be one hot encoded (return single immutable variable)
+#
+#++++++++++++++++++++++++++++++++++
 
 
 def get_dependency(str):
@@ -23,10 +21,30 @@ def get_dependency(str):
     pass
 
 
-def get_entity(str):
+def get_entity_tpyes(str):
     """
-    return the entity types (e.g. PERSON, LOCATION) occurring in the sentence; average
-    length, in characters, of PERSON mentions.
+    return the entity types (e.g. PERSON, LOCATION) occurring in the sentence (binary count vectorizer)
+    """
+
+
+#++++++++++++++++++++++++++++++++++
+#
+# Features that are just numbers to be appended (return single immutable variable)
+#
+#++++++++++++++++++++++++++++++++++
+
+
+def get_case(str):
+    """
+    return a number list containing: the number of entirely-capitalized words; binary indicator for whether sentence is lowercase; binary indicator
+    for whether the first word is capitalized.
+    """
+    return [len([w for w in word_tokenize(str) if w.isupper()]), int(str.islower()), int(str[0].isupper())]
+
+
+def get_entity_length(str):
+    """
+    return average length, in characters, of PERSON mentions.
     """
     pass
 
@@ -71,6 +89,8 @@ def get_punctuation_number(str):
 
 
 if __name__ == "__main__":
+    # stanfordnlp.download('en')
+
     inf1 = "WOW this website IS amazing!!"
     inf2 = "i dunno if they're cool with it"
     for1 = "I shall not comment further on this issue."
