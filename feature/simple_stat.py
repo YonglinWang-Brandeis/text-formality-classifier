@@ -2,7 +2,7 @@
 functions for preprocessing each sentence from the corpus (Part 1)
 """
 
-import corenlp, textblob, stanfordnlp
+import corenlp, textblob, stanfordnlp, collections
 from nltk.tokenize import word_tokenize
 from nltk import ne_chunk, pos_tag, ngrams
 from pickle import dump, load
@@ -60,6 +60,15 @@ def get_ngram(string):
     ngram_list.extend([" ".join(t) for t in ngrams(token, 3)])
 
     return ngram_list
+
+
+def get_pos_number(string):
+    """
+    return POS Number of occurrences of each POS tag, normalized by the sentence length. (Dict vectorizer)
+    """
+    return dict(collections.Counter([j for i,j in pos_tag(word_tokenize(string))]))
+
+
 
 
 # ++++++++++++++++++++++++++++++++++
@@ -124,7 +133,6 @@ def get_lexical(string):
 
     # 3. average word log-freq
 
-
     # 4. average formality score
 
     return output
@@ -139,11 +147,8 @@ def get_parse(string):
     pass
 
 
-def get_pos_number(string):
-    """
-    return POS Number of occurrences of each POS tag, normalized by the sentence length.
-    """
-    pass
+
+
 
 
 def get_punctuation_number(string):
@@ -164,10 +169,10 @@ if __name__ == "__main__":
     # stanfordnlp.download('en')
 
     inf1 = "WOW this website IS amazing!!"
-    inf2 = "i dunno if Johnny said Alex's' cool with going to New York...?"
-    for1 = "Google shall not comment further on this issue."
+    inf2 = "i dunno if Johnny said Alex's cool with going to New York...?"
+    for1 = "Joe Biden shall not comment further on this issue."
     for2 = "Listening to what Sam thinks about New York would be utterly beneficial."
     exs = [inf1, inf2, for1, for2]
 
     for sent in exs:
-        print("result: %s, sentence: \"%s\"" % (str(get_lexical(sent)), sent))
+        print("result: %s, sentence: \"%s\"" % (str(get_pos_number(sent)), sent))

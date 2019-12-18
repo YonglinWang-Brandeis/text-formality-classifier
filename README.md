@@ -20,7 +20,11 @@ $ pip install Keras
 $ pip install readability
 ```
 
-**For the dependency parser to work, make sure that you also do the following in the interpreter:** (this download will be large, around 235MB)
+
+
+MAYBE NOT:
+
+For the dependency parser to work, make sure that you also do the following in the interpreter:** (this download will be large, around 235MB)
 
 ```
 >>> import stanfordnlp
