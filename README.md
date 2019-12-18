@@ -11,7 +11,7 @@ Here are the packages required to run our program
 - NLTK
 - (possibly) Keras 2.3.1
 
-To install CoreNLP, TextBlot, Keras, and readability, type the following in the command line:
+To install CoreNLP, TextBlot, Keras, and readability, run the following commands in the exact order:
 
 ```
 $ pip install stanfordnlp

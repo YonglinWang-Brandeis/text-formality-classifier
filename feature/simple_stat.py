@@ -45,6 +45,7 @@ def get_entity_types(string):
 def get_ngram(string):
     """
     return the unigrams, bigrams, and trigrams appearing in the sentence. (binary count vectorizer)
+    #TODO instead use: bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=1)
     """
     token = word_tokenize(string.lower())
     ngram_list = []
@@ -80,7 +81,24 @@ def get_entity_length(string):
     """
     return average length, in characters, of PERSON mentions.
     """
-    pass
+    tokens = word_tokenize(string)
+    tree = ne_chunk(pos_tag(tokens))
+
+    total_length = 0
+    persons_found = 0
+    # collect unique NE types
+    for l in tree:
+        try:
+            if l._label == "PERSON":
+                total_length += len(l[0][0])
+                persons_found += 1
+        except:
+            pass
+
+    if persons_found:
+        return [total_length/persons_found]
+    else:
+        return [0]
 
 
 def get_lexical(string):
@@ -89,7 +107,27 @@ def get_lexical(string):
     log-frequency according to Google Ngram corpus; average formality score as computed by Pavlick and
     Nenkova (2015).
     """
-    pass
+    # prepare
+    output = []
+    tokens = word_tokenize(string.lower())
+    length = len(tokens)
+
+    # 1. number of contractions, norm by length
+    cont_count = 0
+    for w in tokens:
+        if "\'" in w and len(w) > 1:
+            cont_count += 1
+    output.append(cont_count/length)
+
+    # 2. average word length
+    output.append(sum([len(w) for w in tokens])/length)
+
+    # 3. average word log-freq
+
+
+    # 4. average formality score
+
+    return output
 
 
 def get_parse(string):
@@ -112,17 +150,24 @@ def get_punctuation_number(string):
     """
     punctuation Number of ‘?’, ‘...’, and ‘!’ in the sentence.
     """
-    pass
+    punct_number = 0
+    tokens = word_tokenize(string)
+
+    for w in tokens:
+        if w in ["?", "...", "!"]:
+            punct_number += 1
+    return [punct_number]
+
 
 
 if __name__ == "__main__":
     # stanfordnlp.download('en')
 
     inf1 = "WOW this website IS amazing!!"
-    inf2 = "i dunno if Amy is cool with going to New York"
+    inf2 = "i dunno if Johnny said Alex's' cool with going to New York...?"
     for1 = "Google shall not comment further on this issue."
     for2 = "Listening to what Sam thinks about New York would be utterly beneficial."
     exs = [inf1, inf2, for1, for2]
 
     for sent in exs:
-        print("result: %s, sentence: \"%s\"" % (str(get_ngram(sent)), sent))
+        print("result: %s, sentence: \"%s\"" % (str(get_lexical(sent)), sent))
