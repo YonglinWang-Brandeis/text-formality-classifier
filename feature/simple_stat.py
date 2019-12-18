@@ -9,10 +9,10 @@ from pickle import dump, load
 
 def get_case(str):
     """
-    return the number of entirely-capitalized words; binary indicator for whether sentence is lowercase; binary indicator
+    return a number list containing: the number of entirely-capitalized words; binary indicator for whether sentence is lowercase; binary indicator
     for whether the first word is capitalized.
     """
-    return (len([w for w in word_tokenize(str) if w.isupper()]), int(str.islower()), int(str[0].isupper()))
+    return [len([w for w in word_tokenize(str) if w.isupper()]), int(str.islower()), int(str[0].isupper())]
 
 
 def get_dependency(str):
@@ -79,4 +79,3 @@ if __name__ == "__main__":
 
     for sent in exs:
         print("result: %s, sentence: \"%s\"" % (str(get_case(sent)), sent))
-
