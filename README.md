@@ -8,8 +8,8 @@ Here are the packages required to run our program
 - TextBlob 0.15.3
 - Scikit-learn
 - readability 0.3.1
+- NLTK
 - (possibly) Keras 2.3.1
-- (Possibly) NLTK
 
 To install CoreNLP, TextBlot, Keras, and readability, type the following to the console:
 
