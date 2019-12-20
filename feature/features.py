@@ -21,7 +21,10 @@ ALL_VEC_FEATURES_PATH = "vectorized-features-all.jbl"
 NGRAM_FEAT_PATH = "ngram_feature.jbl"
 ENT_FEAT_PATH = "ent_feature.jbl"
 POS_FEAT_PATH = "pos_feature.jbl"
-NUM_FEAT_PATH = "num_feature.jbl"
+FAST_NUM_FEAT_PATH = "fast_num_feature.jbl"
+SUBJ_FEAT_PATH = "subjectivity_feature.jbl"
+READ_FEAT_PATH = "readability_feature.jbl"
+ENT_LEN_FEAT_PATH = "entity_length_feature.jbl"
 
 # vector paths
 NGRAM_VEC_PATH = "../vectorizer/ngram_count_vectorizer.jbl"
@@ -51,7 +54,25 @@ def extract_all_features():
     #  2) non-number, need to be vectorized (entity types -> count vec, pos-num -> dict vec)
     #  3) just numbers (entity length, lexical, subjective...)
 
-    return get_number_features(sent_list)
+    # ngram
+    all_feat_vec = load_all_features()
+
+
+def load_all_features():
+    """
+    return a list of all the feature group arrays for horizontal stacking
+    """
+
+    all_feat_list = []
+
+    all_feat_list.append(get_ngram_features())
+    all_feat_list.append(get_entity_features())
+    all_feat_list.append(get_pos_features())
+    all_feat_list.append(get_fast_number_features())
+    all_feat_list.append(get_readability_features())
+    all_feat_list.append(get_entity_length_features())
+
+    return all_feat_list
 
 def get_ngram_features(sent_list: list):
     """
@@ -124,25 +145,104 @@ def get_pos_features(sent_list: list):
         return output
 
 
-def get_number_features(sent_list):
+def get_fast_number_features(sent_list):
     """
     return an array of an array of features for each sentence
     """
     try:
-        return load(open(NUM_FEAT_PATH, "rb"))
+        return load(open(FAST_NUM_FEAT_PATH, "rb"))
     except IOError:
         print("Cannot load number vectors, now extracting feature...")
 
         # get list of raw number stats for each sentence
         print("getting raw features...")
-        num_lists = [simple_stat.get_all_num_stats(s) for s in sent_list]
+        num_lists = []
+        for s in sent_list:
+            num_lists.append(simple_stat.get_fast_num_stats(s))
         print("features created")
 
         # list into vec array
         output = np.array(num_lists)
 
         # save the feature vectores
-        dump(output, NUM_FEAT_PATH)
+        dump(output, FAST_NUM_FEAT_PATH)
+
+        return output
+
+
+def get_subjectivity_features(sent_list):
+    """
+    return an array of an array of features for each sentence
+    """
+    # TODO generate these if time allows
+    try:
+        return load(open(SUBJ_FEAT_PATH, "rb"))
+    except IOError:
+        print("Cannot load number vectors, now extracting feature...")
+
+        # get list of raw number stats for each sentence
+        print("getting raw features...")
+        num_lists = []
+        for s in sent_list:
+            num_lists.append(simple_stat.get_subjectivity(s))
+        print("features created")
+
+        # list into vec array
+        output = np.array(num_lists)
+
+        # save the feature vectores
+        dump(output, SUBJ_FEAT_PATH)
+
+        return output
+
+
+def get_readability_features(sent_list):
+    """
+    return an array of an array of features for each sentence
+    """
+    try:
+        return load(open(READ_FEAT_PATH, "rb"))
+    except IOError:
+        print("Cannot load number vectors, now extracting feature...")
+
+        # get list of raw number stats for each sentence
+        print("getting raw features...")
+        num_lists = []
+        for s in sent_list:
+            num_lists.append(simple_stat.get_readability(s))
+        print("features created")
+
+        # list into vec array
+        output = np.array(num_lists)
+
+        # save the feature vectores
+        dump(output, READ_FEAT_PATH)
+
+        return output
+
+
+def get_entity_length_features(sent_list):
+    """
+    return an array of an array of features for each sentence
+    """
+    try:
+        return load(open(ENT_LEN_FEAT_PATH, "rb"))
+    except IOError:
+        print("Cannot load entity length vectors, now extracting feature...")
+
+        # get list of raw number stats for each sentence
+        print("getting raw features...")
+        num_lists = []
+        for s in sent_list:
+            num_lists.append(simple_stat.get_entity_length(s))
+        print("features created")
+
+        # list into vec array
+        output = np.array(num_lists)
+
+        # save the feature vectores
+        dump(output, ENT_LEN_FEAT_PATH)
+        print("done!")
 
         return output
 

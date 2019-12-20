@@ -57,23 +57,34 @@ def get_pos_number(string):
 # ++++++++++++++++++++++++++++++++++
 
 
-def get_all_num_stats(string):
+def get_slow_num_stats(string):
+    # get the slower-to-compute features
+
     output = []
-    # 3 nums
-    output.extend(get_case(string))
     # 1 num
     output.extend(get_entity_length(string))
-    # 2 nums
-    output.extend(get_lexical(string))
-    # 1 num
-    output.extend(get_punctuation_number(string))
     # 2 nums
     output.extend(get_readability(string))
     # 6 nums
     output.extend(get_subjectivity(string))
 
-    # total of 15 nums per input sentence
+    # total of 9 nums per input sentence
     return output
+
+
+def get_fast_num_stats(string):
+    # get the easier-to-compute features
+    output = []
+    # 3 nums
+    output.extend(get_case(string))
+    # 2 nums
+    output.extend(get_lexical(string))
+    # 1 num
+    output.extend(get_punctuation_number(string))
+
+    # total of 6 nums per input sentence
+    return output
+
 
 
 def get_case(string):
@@ -168,9 +179,12 @@ def get_readability(text):
     """
     return readability Length of the sentence, in words and characters; Flesch-Kincaid Grade Level score.
     """
-    blob = TextBlob(text)
-    results = readability.getmeasures(text, lang='en')
-    return [len(blob.words), round(results['readability grades']['FleschReadingEase'], 2)]
+    try:
+        blob = TextBlob(text)
+        results = readability.getmeasures(text, lang='en')
+        return [len(blob.words), round(results['readability grades']['FleschReadingEase'], 2)]
+    except ValueError:
+        return[0, 0]
 
 
 def get_subjectivity(text):
@@ -225,4 +239,4 @@ if __name__ == "__main__":
     exs = [inf1, inf2, for1, for2]
 
     for sent in exs:
-        print("result: %s, sentence: \"%s\"" % (str(get_all_num_stats(sent)), sent))
+        print("result: %s, sentence: \"%s\"" % (str(get_fast_num_stats(sent)), sent))
