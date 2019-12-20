@@ -9,7 +9,7 @@ import numpy as np
 from feature import simple_stat
 from preprocessing import corpus
 
-from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import CountVectorizer
 
 from joblib import load, dump
@@ -29,48 +29,65 @@ ENT_LEN_FEAT_PATH = "entity_length_feature.jbl"
 # vector paths
 NGRAM_VEC_PATH = "../vectorizer/ngram_count_vectorizer.jbl"
 ENT_VEC_PATH = "../vectorizer/ent_count_vectorizer.jbl"
-POS_VEC_PATH = "../vectorizer/pos_dict_vectorizer.jbl"
+POS_VEC_PATH = "../vectorizer/pos_feat_harsher.jbl"
 
 
 def extract_all_features():
     """
     return a list of all features extracted from the input string, by loading existing data or processing corpus
     """
-    # record time
-    t0 = time.time()
-
-    # get the sentence dictionary
     try:
-        sent_dict = pickle.load(open("../preprocessing/corpus_dict.pkl", "rb"))
+        return load(open(ALL_VEC_FEATURES_PATH, "rb"))
     except IOError:
-        sent_dict = corpus.load_corpus_dict()
 
-    sent_list = []
-    sent_list.extend(sent_dict["formal"])
-    sent_list.extend(sent_dict["informal"])
+        # get the sentence dictionary
+        try:
+            sent_dict = pickle.load(open("../preprocessing/corpus_dict.pkl", "rb"))
+        except IOError:
+            sent_dict = corpus.load_corpus_dict()
 
-    # TODO 3 types of features:
-    #  1) directly vectorized (ngram),
-    #  2) non-number, need to be vectorized (entity types -> count vec, pos-num -> dict vec)
-    #  3) just numbers (entity length, lexical, subjective...)
+        sent_list = []
+        sent_list.extend(sent_dict["formal"])
+        sent_list.extend(sent_dict["informal"])
 
-    # ngram
-    all_feat_vec = load_all_features()
+        # TODO 3 types of features:
+        #  1) directly vectorized (ngram),
+        #  2) non-number, need to be vectorized (entity types -> count vec, pos-num -> dict vec)
+        #  3) just numbers (entity length, lexical, subjective...)
+
+        # load feature list
+        print("loading all features")
+        all_feat_vec = load_all_features(sent_list)
+
+        # horizontally stack all features
+        print("stacking all features")
+        output = all_feat_vec[0]
+
+        for i in range(1, len(all_feat_vec)):
+            output = np.hstack((output, all_feat_vec[i])) # debug pause here
+
+        # save the output
+        print("dumping all features")
+        dump(output, ALL_VEC_FEATURES_PATH)
+
+        print("done!")
+        return output
 
 
-def load_all_features():
+
+def load_all_features(sent_list):
     """
     return a list of all the feature group arrays for horizontal stacking
     """
 
     all_feat_list = []
 
-    all_feat_list.append(get_ngram_features())
-    all_feat_list.append(get_entity_features())
-    all_feat_list.append(get_pos_features())
-    all_feat_list.append(get_fast_number_features())
-    all_feat_list.append(get_readability_features())
-    all_feat_list.append(get_entity_length_features())
+    all_feat_list.append(get_ngram_features(sent_list).toarray())
+    all_feat_list.append(get_entity_features(sent_list).toarray())
+    all_feat_list.append(get_pos_features(sent_list).toarray())
+    all_feat_list.append(get_fast_number_features(sent_list))
+    all_feat_list.append(get_readability_features(sent_list))
+    all_feat_list.append(get_entity_length_features(sent_list))
 
     return all_feat_list
 
@@ -128,7 +145,7 @@ def get_pos_features(sent_list: list):
         return load(open(POS_FEAT_PATH, "rb"))
     except IOError:
         print("Cannot load POS vectors, now extracting creating vectorizer and extracting feature...")
-        dv = DictVectorizer()
+        dv = FeatureHasher()
 
         # get list of entities for each sentence
         print("getting raw features...")
