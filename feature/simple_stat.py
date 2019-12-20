@@ -43,26 +43,6 @@ def get_entity_types(string):
     return list(ners)
 
 
-def get_ngram(string):
-    """
-    return the unigrams, bigrams, and trigrams appearing in the sentence. (binary count vectorizer)
-    #TODO instead use: bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r'\b\w+\b', min_df=1)
-    """
-    token = word_tokenize(string.lower())
-    ngram_list = []
-
-    # get unigrams
-    ngram_list.extend([" ".join(t) for t in ngrams(token, 1)])
-
-    # get bigrams
-    ngram_list.extend([" ".join(t) for t in ngrams(token, 2)])
-
-    # get trigrams
-    ngram_list.extend([" ".join(t) for t in ngrams(token, 3)])
-
-    return ngram_list
-
-
 def get_pos_number(string):
     """
     return POS Number of occurrences of each POS tag, normalized by the sentence length. (Dict vectorizer)
@@ -70,13 +50,30 @@ def get_pos_number(string):
     return dict(collections.Counter([j for i,j in pos_tag(word_tokenize(string))]))
 
 
-
-
 # ++++++++++++++++++++++++++++++++++
 #
 # Features that are just numbers to be appended (return single immutable variable)
 #
 # ++++++++++++++++++++++++++++++++++
+
+
+def get_all_num_stats(string):
+    output = []
+    # 3 nums
+    output.extend(get_case(string))
+    # 1 num
+    output.extend(get_entity_length(string))
+    # 2 nums
+    output.extend(get_lexical(string))
+    # 1 num
+    output.extend(get_punctuation_number(string))
+    # 2 nums
+    output.extend(get_readability(string))
+    # 6 nums
+    output.extend(get_subjectivity(string))
+
+    # total of 15 nums per input sentence
+    return output
 
 
 def get_case(string):
@@ -106,7 +103,7 @@ def get_entity_length(string):
             pass
 
     if persons_found:
-        return [total_length/persons_found]
+        return [round(total_length/persons_found, 2)]
     else:
         return [0]
 
@@ -127,10 +124,10 @@ def get_lexical(string):
     for w in tokens:
         if "\'" in w and len(w) > 1:
             cont_count += 1
-    output.append(cont_count/length)
+    output.append(round(cont_count/length, 2))
 
     # 2. average word length
-    output.append(sum([len(w) for w in tokens])/length)
+    output.append(round(sum([len(w) for w in tokens])/length, 2))
 
     # 3. average word log-freq
 
@@ -228,4 +225,4 @@ if __name__ == "__main__":
     exs = [inf1, inf2, for1, for2]
 
     for sent in exs:
-        print("result: %s, sentence: \"%s\"" % (str(get_readability(sent)), sent))
+        print("result: %s, sentence: \"%s\"" % (str(get_all_num_stats(sent)), sent))

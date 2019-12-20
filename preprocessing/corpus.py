@@ -18,25 +18,26 @@ SENT_DICT_PATH = "corpus_dict.pkl"
 def load_corpus_dict():
     try:
         # load the list of sentence strings
-        return load(open(SENT_DICT_PATH, "rb"))
+        return load(open(SENT_DICT_PATH, "r"))
     except IOError:
         # first time running, extract all sentences from corpus
 
         # dictionary of {"formal": all formal sentences, "informal": all informal sentences}
-        sent_dict = {}
+        sent_dict = {"label": []}
 
-        for t in SENT_TYPE:
+        for label in SENT_TYPE:
             sent_list = []
-            f = open(CORPUS_PATH_DICT[t], "rb")
+            f = open(CORPUS_PATH_DICT[label], "r")
 
             # get each line into the list
             sent = f.readline()
             while sent:
                 sent_list.append(sent)
+                sent_dict["label"].append(label)
                 sent = f.readline()
 
             # enter the list to corpus
-            sent_dict[t] = sent_list
+            sent_dict[label] = sent_list
 
         # pickle the corpus dictionary
         dump(sent_dict, open(SENT_DICT_PATH, "wb"))
