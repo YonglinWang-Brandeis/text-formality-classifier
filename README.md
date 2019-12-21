@@ -4,18 +4,16 @@
 
 Here are the packages required to run our program
 
-- Stanford CoreNLP 3.9.2
 - TextBlob 0.15.3
 - Scikit-learn
 - readability 0.3.1
 - NLTK
 - Spacy
-- (possibly) Keras 2.3.1
+- Keras 2.3.1
 
-To install CoreNLP, TextBlot, Keras, and readability, run the following commands in the exact order:
+To install TextBlot, Keras, readability, and spacy, run the following commands in the exact order:
 
 ```
-$ pip install stanfordnlp
 $ pip install textblob
 $ pip install Keras
 $ pip install readability
@@ -25,14 +23,34 @@ $ python -m spacy download en_core_web_sm
 
 
 
-MAYBE NOT:
+## Running the Code
 
-For the dependency parser to work, make sure that you also do the following in the interpreter:** (this download will be large, around 235MB)
+Since all the feature vectors, vectorizers, and models are saved with joblib, you can skip right to the **Predicting** section. 
 
-```
->>> import stanfordnlp
->>> stanfordnlp.download('en')   # This downloads the English models for the neural pipeline
-```
+#### Loading Corpus
+
+As requested by the original owner of the corpus, the raw text version of the corpus will **NOT** be included in this public repository. 
+
+- Instead, we have pickled the dictionary object containing the corpus and corresponding tags. To load the corpus, run *corpus.py* under *preprocessing* folder.
+
+#### Feature Extraction and encoding (very time consuming)
+
+To perform all the feature extraction/load the vectorized features, run *features.py* under *feature* folder. 
+
+#### Model Training (slightly time consuming)
+
+To see how the model training works, run the following Jupyter Notebooks in the toplevel of the repository:
+
+- models_raw.ipynb: model training using the raw text of a sentence
+  - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
+- models_features.ipynb: model training using different features extracted from a given sentence (not the sentence itself)
+  - Features: entity types, entity length, simple numerical stats (fast number), n-gram, readability
+  - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
+- model_GloVe.ipynb: model training using LSTM
+
+#### Predicting
+
+To make a predicting for a string of sentence, do the following:
 
 
 
