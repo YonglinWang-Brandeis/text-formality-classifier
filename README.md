@@ -25,32 +25,36 @@ $ python -m spacy download en_core_web_sm
 
 ## Running the Code
 
-Since all the feature vectors, vectorizers, and models are saved with joblib, you can skip right to the **Predicting** section. 
+Since all the feature vectors, vectorizers, and models are saved with joblib, you can skip right to the **Model Training** and **Predicting** sections. 
 
 #### Loading Corpus
 
 As requested by the original owner of the corpus, the raw text version of the corpus will **NOT** be included in this public repository. 
 
-- Instead, we have pickled the dictionary object containing the corpus and corresponding tags. To load the corpus, run *corpus.py* under *preprocessing* folder.
+- Instead, we have pickled the dictionary object containing the corpus and corresponding tags. To load the corpus, run ***corpus.py*** under *preprocessing* folder.
 
 #### Feature Extraction and encoding (very time consuming)
 
-To perform all the feature extraction/load the vectorized features, run *features.py* under *feature* folder. 
+To perform all the feature extraction/load the vectorized features, run ***features.py*** under *feature* folder. 
 
 #### Model Training (slightly time consuming)
 
 To see how the model training works, run the following Jupyter Notebooks in the toplevel of the repository:
 
-- models_raw.ipynb: model training using the raw text of a sentence
+- **models_raw.ipynb**: model training using the raw text of a sentence
   - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
-- models_features.ipynb: model training using different features extracted from a given sentence (not the sentence itself)
+- **models_features.ipynb**: model training using different features extracted from a given sentence (not the sentence itself)
   - Features: entity types, entity length, simple numerical stats (fast number), n-gram, readability
   - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
-- model_GloVe.ipynb: model training using LSTM
+- **model_GloVe.ipynb**: model training using LSTM
 
-#### Predicting
+See the write-up for an interpretation for the model evaluation. 
 
-To make a predicting for a string of sentence, do the following:
+#### Predicting (Beta Feature)
+
+To see how the model makes a prediction for a few example sentences, open ***prediction.ipynb*** in the toplevel of the repository. 
+
+- Due to some compatibility issues, there's a portion of models that cannot be loaded for prediction. We are currently working on this. 
 
 
 
