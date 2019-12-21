@@ -2,7 +2,7 @@
 extract all features
 """
 
-import corenlp, textblob
+import textblob
 import time
 import numpy as np
 

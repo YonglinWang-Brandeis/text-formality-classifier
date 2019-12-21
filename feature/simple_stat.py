@@ -2,7 +2,7 @@
 functions for preprocessing each sentence from the corpus (Part 1)
 """
 
-import corenlp, stanfordnlp, spacy, collections, readability
+import spacy, collections, readability
 from textblob import TextBlob
 from nltk.tokenize import word_tokenize
 from nltk import ne_chunk, pos_tag, ngrams
