@@ -42,7 +42,7 @@ To perform all the feature extraction/load the vectorized features, run ***featu
 To see how the model training works, run the following Jupyter Notebooks in the toplevel of the repository:
 
 - **models_raw.ipynb**: model training using the raw text of a sentence
-  - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
+  - Models Used: Naive Bayes (MultinomialNB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 
 - **models_features.ipynb**: model training using different features extracted from a given sentence (not the sentence itself)
   - Features: entity types, entity length, simple numerical stats (fast number), n-gram, readability
   - Models Used: Naive Bayes (Multinomial NB), Logistic Regression (LogisticRegression), Decision Tree (DecisionTreeClassifier) 

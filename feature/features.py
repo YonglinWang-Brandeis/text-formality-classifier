@@ -50,11 +50,6 @@ def extract_all_features():
         sent_list.extend(sent_dict["formal"])
         sent_list.extend(sent_dict["informal"])
 
-        # TODO 3 types of features:
-        #  1) directly vectorized (ngram),
-        #  2) non-number, need to be vectorized (entity types -> count vec, pos-num -> dict vec)
-        #  3) just numbers (entity length, lexical, subjective...)
-
         # load feature list
         print("loading all features")
         all_feat_vec = load_all_features(sent_list)
