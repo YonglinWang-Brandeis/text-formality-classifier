@@ -1,17 +1,23 @@
 # Formality Classifier
 
+## Documentation
+
+This is a text formality classifier project that examines how different machine learning models perform in classifying a text as formal or informal. 
+
+Detailed documentations of the project, such as the project proposal and the project report, can be found in [`doc`](doc) directory. 
+
 ## Package Requirements
 
 Here are the packages required to run our program
 
-- TextBlob 0.15.3
-- Scikit-learn
-- readability 0.3.1
-- NLTK
-- Spacy
-- Keras 2.3.1
+- [`TextBlob 0.15.3`](https://textblob.readthedocs.io/en/dev/)
+- [`Scikit-learn`](https://scikit-learn.org/stable/)
+- [`readability 0.3.1`](https://pypi.org/project/readability/)
+- [`NLTK`](https://www.nltk.org)
+- [`spaCy`](https://spacy.io)
+- [`Keras 2.3.1`](https://keras.io)
 
-To install TextBlot, Keras, readability, and spacy, run the following commands in the exact order:
+To install the latest version of TextBlot, Keras, readability, and spacy, run the following commands in the exact order:
 
 ```
 $ pip install textblob
